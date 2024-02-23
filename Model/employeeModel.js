@@ -5,7 +5,6 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide your full name"],
     }
-
     ,
     email: {
         type: String,

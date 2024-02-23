@@ -25,9 +25,7 @@ const login = async (req, res) => {
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "user does not exist." });
     }
-
-
-
+    
     if (!passwordIsValid(req.body.password, foundUser.password)) {
       return res.status(StatusCodes.UNAUTHORIZED).send({
         accessToken: null,
