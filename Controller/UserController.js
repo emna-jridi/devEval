@@ -1,19 +1,17 @@
-const config = require('../Config/appConfig')
+
 const User = require("../Model/UserModel");
 const bcrypt = require("bcryptjs");
 const { StatusCodes } = require("http-status-codes");
 const { passwordIsValid, validUserType, generateToken } = require("../Service/AuthService");
-const ROLES = require('../Config/constConfig')
+const ROLES = require('../Config/ConstConfig')
 
 const login = async (req, res) => {
   try {
-
-    if (!user.email || !user.password) {
+    if (!req.body.email || !req.body.password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Please provide an email and password !" });
     }
-
     const foundUser = await User.findOne({ email: req.body.email });
     if (!foundUser) {
       return res
@@ -39,7 +37,7 @@ const login = async (req, res) => {
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "User does not have permission to connect." });
     }
-    const token = generateToken(user.id);
+    const token = generateToken(foundUser.id, foundUser.userType);
     res
       .status(StatusCodes.ACCEPTED)
       .json({ message: "User logged in successfully.", accessToken: token });
@@ -126,7 +124,7 @@ const UpdateUser = async (req, res) => {
         .json({ message: "Please provide an email and a position !" });
     }
 
-    const update = { email: req.body.email, userType: req.body.userType, updatedAt: new Date() };
+    const update = { email: req.body.email, userType: req.body.userType };
     const updatedUser = await User.findOneAndUpdate(
       { email: req.params.email },
       update,

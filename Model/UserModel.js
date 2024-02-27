@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const roles = require('../Config/constConfig')
+const roles = require('../Config/ConstConfig')
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -27,13 +27,8 @@ const userSchema = new mongoose.Schema({
     },
 
   },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now(),
-  },
-});
+
+},
+  { timestamps: true } //createdAt & updatedAt are handled automatically.
+  );
 module.exports = mongoose.model("user", userSchema);
