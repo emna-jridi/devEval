@@ -1,4 +1,4 @@
-const Employee = require('../Model/employeeModel')
+const Employee = require('../Model/EmployeeModel')
 const { StatusCodes } = require('http-status-codes');
 
 
@@ -20,7 +20,6 @@ const createEmployee = async (req, res) => {
             rank: req.body.rank,
             entryDate: req.body.entryDate,
         })
-
         // Checking if all required properties are provided
         if (!employee.fullName || !employee.email || !employee.position || !employee.rank || !employee.entryDate) {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: "Please provide all employee information!" });
@@ -66,13 +65,11 @@ const getAllEmployee = async (req, res) => {
 }
 
 // Function to update an employee
-const updateEmpolyee = async (req, res) => {
+const  updateEmpolyee = async (req, res) => {
     try {
 
         // Checking if all required properties are provided in the request body
         if (!req.body.email || !req.body.fullName || !req.body.position || !req.body.rank || !req.body.entryDate) {
-
-
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({ message: "Please provide all employee information!" });
@@ -85,6 +82,7 @@ const updateEmpolyee = async (req, res) => {
             rank: req.body.rank,
             entryDate: req.body.entryDate,
         }
+        console.log();
         // Finding and updating the employee with the provided email
         const updatedEmployee = await Employee.findOneAndUpdate({ email: req.params.email },
             update,

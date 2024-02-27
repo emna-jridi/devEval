@@ -2,30 +2,30 @@ const config = require('../Config/appConfig')
 const User = require("../Model/UserModel");
 const bcrypt = require("bcryptjs");
 const { StatusCodes } = require("http-status-codes");
-const { passwordIsValid, validUserType, generateToken } = require("../service/authService");
+const { passwordIsValid, validUserType, generateToken } = require("../Service/AuthService");
 const ROLES = require('../Config/constConfig')
 
 const login = async (req, res) => {
-  const user = new User({
-    email: req.body.email,
-    password: req.body.password,
-    userType: req.body.userType,
-  });
-
-  if (!user.email || !user.password) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Please provide an email and password !" });
-  }
-
   try {
+
+    if (!user.email || !user.password) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide an email and password !" });
+    }
+
     const foundUser = await User.findOne({ email: req.body.email });
     if (!foundUser) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "user does not exist." });
     }
-    
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password,
+      userType: req.body.userType,
+    });
+
     if (!passwordIsValid(req.body.password, foundUser.password)) {
       return res.status(StatusCodes.UNAUTHORIZED).send({
         accessToken: null,
@@ -82,8 +82,7 @@ const register = async (req, res) => {
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send({ message: error.message });
   }
-}
-  ;
+};
 
 
 const getAllUsers = async (req, res) => {
@@ -121,7 +120,6 @@ const getUserByEmail = async (req, res) => {
 
 const UpdateUser = async (req, res) => {
   try {
-
     if (!req.body.email || !req.body.userType) {
       return res
         .status(StatusCodes.BAD_REQUEST)

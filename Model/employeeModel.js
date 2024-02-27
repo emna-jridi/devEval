@@ -10,7 +10,7 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide an email ! "],
 
-        validate: [validator.isEmail, "Please provide a valid email"],
+       // validate: [validator.isEmail, "Please provide a valid email"],
         unique: true,
     },
     position: {
