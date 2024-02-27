@@ -2,7 +2,7 @@ const Agent = require('../Model/UserModel');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require("bcryptjs");
 
-const ROLES = require('../Config/constConfig')
+const ROLES = require('../Config/ConstConfig')
 
 // Function to create a new Agent
 const createAgent = async (req, res) => {

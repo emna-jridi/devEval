@@ -53,9 +53,11 @@ const getAllEmployee = async (req, res) => {
                 position: employee.position,
                 rank: employee.rank,
                 entryDate: employee.entryDate,
+                createdAt: employee.createdAt,
+                updatedAt: employee.updatedAt
             }
         })
-        res.status(StatusCodes.ACCEPTED).json({ users: data });
+        res.status(StatusCodes.ACCEPTED).json({ employees: data });
 
     } catch (error) {
         res

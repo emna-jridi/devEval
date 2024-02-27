@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
 const roles = require('../Config/ConstConfig')
-
+const { userValidationSchema } = require('../Config/ValidatorConfig')
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -11,7 +10,6 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please provide an email"],
-    validate: [validator.isEmail, "Please provide a valid email"],
     unique: true,
   },
   password: {
@@ -30,5 +28,15 @@ const userSchema = new mongoose.Schema({
 
 },
   { timestamps: true } //createdAt & updatedAt are handled automatically.
-  );
+);
+
+userSchema.pre('save', function (next) {
+  const { error } = userValidationSchema.validate(this.toObject());
+  if (error) {
+    throw new Error(`Validation error: ${error.message}`);
+
+  }
+  next();
+});
+
 module.exports = mongoose.model("user", userSchema);
