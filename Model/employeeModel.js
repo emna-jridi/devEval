@@ -35,6 +35,7 @@ employeeSchema.pre('save', function(next){
 if (error){
     throw new Error(`validation error: ${error.message}`)
 }
+next();
 })
 
 module.exports = mongoose.model("employee", employeeSchema)

@@ -34,8 +34,8 @@ userSchema.pre('save', function (next) {
   const { error } = userValidationSchema.validate(this.toObject());
   if (error) {
     throw new Error(`Validation error: ${error.message}`);
-
   }
+
   next();
 });
 

@@ -84,7 +84,6 @@ const  updateEmpolyee = async (req, res) => {
             rank: req.body.rank,
             entryDate: req.body.entryDate,
         }
-        console.log();
         // Finding and updating the employee with the provided email
         const updatedEmployee = await Employee.findOneAndUpdate({ email: req.params.email },
             update,
