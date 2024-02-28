@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const validator = require("validator");
+const {EmpolyeeValidationSchema}= require('../Config/ValidatorConfig')
+
 const employeeSchema = new mongoose.Schema({
     fullName: {
         type: String,
@@ -9,8 +10,6 @@ const employeeSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, "Please provide an email ! "],
-
-       // validate: [validator.isEmail, "Please provide a valid email"],
         unique: true,
     },
     position: {
@@ -18,7 +17,7 @@ const employeeSchema = new mongoose.Schema({
         required: [true, "Please provide the position !"],
     },
     rank: {
-        type: String,
+        type: Number,
         required: [true, "Please provide the rank !"],
     },
     entryDate: {
@@ -30,5 +29,12 @@ const employeeSchema = new mongoose.Schema({
 }, { timestamps: true } //createdAt & updatedAt are handled automatically.
 )
 
+//a verifier
+employeeSchema.pre('save', function(next){
+    const {error} = EmpolyeeValidationSchema.validate(this.toObject());
+if (error){
+    throw new Error(`validation error: ${error.message}`)
+}
+})
 
 module.exports = mongoose.model("employee", employeeSchema)

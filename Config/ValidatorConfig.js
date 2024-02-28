@@ -1,11 +1,11 @@
 const Joi = require('joi');
-const ROLES = require ('../Config/ConstConfig')
+const ROLES = require('../Config/ConstConfig')
 
 
 const userValidationSchema = Joi.object({
     _id: Joi.object({
         $oid: Joi.string().length(24).hex(), // Ensure valid MongoDB ObjectID
-      }),
+    }),
     fullName: Joi.string()
         .alphanum()
         .min(3)
@@ -17,8 +17,10 @@ const userValidationSchema = Joi.object({
         .required(),
 
     password: Joi.string()
-       // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-        ,
+        .required()
+        //.pattern(new RegExp('^[a-zA-Z0-9!@#$%^&*()_+\\-=\\[\\]{};:\'"|,.<>?]{3,30}$'))
+
+    ,
 
     userType: Joi.string()
         .valid(ROLES.RA, ROLES.RPA, ROLES.RTA)
@@ -38,17 +40,17 @@ const EmpolyeeValidationSchema = Joi.object({
         .required(),
 
     position: Joi.string()
-    .required(),
+        .required(),
 
     rank: Joi.number()
-    .required(),
+        .required(),
     entryDate: Joi.date()
-    .iso()//iso => format 'YYYY-MM-DD'
-    .required(),
-   
+        .iso()//iso => format 'YYYY-MM-DD'
+        .required(),
+
 
 }).options({ abortEarly: false, allowUnknown: true });//execlure  les champs supplementaires de la validation
 
 
 
-module.exports = {    userValidationSchema: userValidationSchema, EmpolyeeValidationSchema:EmpolyeeValidationSchema }
+module.exports = { userValidationSchema: userValidationSchema, EmpolyeeValidationSchema: EmpolyeeValidationSchema }
