@@ -2,6 +2,14 @@ const mongoose = require('mongoose')
 
 
 const releaseSchema = new mongoose.Schema({
+    id: { 
+        type: Number,
+          unique: true 
+        },
+        name:{
+            type:String, 
+            required:true, 
+        },
     description: {
         type: String,
         required: [true, "Please provide a description of the release "],
@@ -14,9 +22,15 @@ const releaseSchema = new mongoose.Schema({
         type: Date,
         required: [true, "Please provide an end date of the release"]
     },
-    projectId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'project',
+    assignedProject: {
+        id :{
+            type: mongoose.Schema.Types.ObjectId,
+            ref : 'project'
+        },  
+        label:{
+            type:String,
+            default:'non assigned'
+        },
     }
 })
 

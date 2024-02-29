@@ -21,7 +21,7 @@ const validUserType = (userType) => {
 const generateToken = (userId, userType) => {
   return jwt.sign({ id: userId, userType: userType }, config.secret, {
     algorithm: "HS256",
-    expiresIn: 3600,
+    expiresIn: 86400,
   });
 };
 

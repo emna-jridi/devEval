@@ -7,6 +7,9 @@ const { createEmployee, deleteEmployee, getAllEmployee, updateEmpolyee } = requi
 const { authorizationAdmin, authorizationRTA,
     authorizationRPA, } = require("../Service/AuthService")
 
+const { createProject, getAllProject, updateProject, deleteProject, assignToEmployee } = require('../Controller/ProjectController')
+const {createRelease,getAllReleases,updateRelease,deleteRelease,assignToProject}= require('../Controller/ReleaseController')
+
 //authentication route 
 router.route('/users').get(getAllUsers)
 router.route('/login').post(login)
@@ -22,6 +25,26 @@ router.route('/agent/:email').put(authorizationAdmin, updateAgent).delete(author
 //employee Crud
 router.route('/employee').post(authorizationAdmin, createEmployee)
 router.route('/employees').get(getAllEmployee)
-router.route('/employee/:email').put(authorizationAdmin, updateEmpolyee).delete(authorizationAdmin, deleteEmployee)
+router.route('/employee/:email').put(authorizationAdmin, updateEmpolyee)
+    .delete(authorizationAdmin, deleteEmployee)
+
+
+//Project Crud 
+router.route('/project').post(authorizationAdmin, createProject)
+router.route('/projects').get(getAllProject)
+router.route('/project/:label').put(authorizationAdmin, updateProject)
+    .delete(authorizationAdmin, deleteProject)
+    .post(authorizationAdmin, assignToEmployee)
+
+
+
+
+    //Release Crud 
+
+router.route('/release').post(createRelease)
+router.route('/releases').get(getAllReleases)
+router.route('/release/:name').put(updateRelease)
+.delete(deleteRelease)
+.post(assignToProject)
 
 module.exports = router 

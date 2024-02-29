@@ -32,15 +32,21 @@ const createProject = async (req, res) => {
     }
 };
 
+//populate() => recuepere les donnees de bd
+
 const getAllProject = async (req, res) => {
     try {
         // Finding all projects in the database
-        const projects = await Project.find({});
+        const projects = await Project.find({}).populate(
+            "assignedEmployee",
+            "-_id email"
+        );
         // Mapping the project data to a simpler format
         const data = projects.map((project) => {
             return {
                 label: project.label,
                 description: project.description,
+                assignedEmployee: project.assignedEmployee,
             };
         });
         res.status(StatusCodes.ACCEPTED).json({ Projects: data });
@@ -93,11 +99,11 @@ const deleteProject = async (req, res) => {
         if (!projectLabel) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
-                .json({ message: "Missing employee email." });
+                .json({ message: "Missing project label." });
         }
-        // Finding and deleting the project with the provided email
+        // Finding and deleting the project with the provided label
         const project = await Project.findOneAndDelete({
-            label: project.label,
+            label: projectLabel,
         });
 
         if (!project) {
@@ -115,23 +121,35 @@ const deleteProject = async (req, res) => {
     }
 };
 
-//à modifier
+//assign a project to an employee via ID and email
 const assignToEmployee = async (req, res) => {
     try {
+        employeeEmail = req.body.email;
+        projectLabel = req.params.label;
         const employee = await Employee.findOne({ email: employeeEmail });
         if (!employee) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({ message: `Employee with email ${employeeEmail} not found` });
         }
-        await Project.findByIdAndUpdate(Project._id, {
-            assignedEmployee: employee._id,
-        });
-        return res
-            .status(StatusCodes.ACCEPTED)
-            .send({
-                message: `Project assigned to employee ${employeeEmail} successfully`,
+        projectFound = await Project.findOne({ label: projectLabel });
+        if (projectFound.assignedEmployee) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: `${projectFound.label} already assigned`,
             });
+        }
+        let update = {
+            assignedEmployee: {
+                id: employee._id,
+                email: employee.email,
+            },
+        };
+        await Project.findOneAndUpdate({ label: projectLabel }, update, {
+            new: true,
+        });
+        return res.status(StatusCodes.ACCEPTED).send({
+            message: `Project assigned to employee ${employeeEmail} successfully`,
+        });
     } catch (error) {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
