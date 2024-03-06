@@ -2,29 +2,36 @@ const Project = require("../Model/ProjectModel");
 const Employee = require("../Model/EmployeeModel");
 const { StatusCodes } = require("http-status-codes");
 
+
+
+// Function to create a new demand
 const createProject = async (req, res) => {
     try {
         const foundProject = await Project.findOne({ label: req.body.label });
+        // Checking if a project with the provided label already exists
         if (foundProject) {
             return res
                 .status(StatusCodes.UNAUTHORIZED)
                 .json({ message: `${foundProject.label} already exists.` });
         }
+        // Creating a new project instance with data from the request body
         const project = new Project({
             label: req.body.label,
             description: req.body.description,
         });
-
+        // Checking if all required properties are provided
         if (!project.label || !project.description) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({ message: "Please provide all project information!" });
         }
+        // Saving the new demand to the database
         await project.save();
         // Sending a success response
         res
             .status(StatusCodes.ACCEPTED)
             .send({ message: `${project.label} was registered successfully!` });
+        // Sending an internal server error response if an error occurs
     } catch (error) {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -32,8 +39,8 @@ const createProject = async (req, res) => {
     }
 };
 
-//populate() => recuepere les donnees de bd
-
+//populate() => Récupère les donnees de bd
+// Function to retrieve all project
 const getAllProject = async (req, res) => {
     try {
         // Finding all projects in the database
@@ -126,27 +133,32 @@ const assignToEmployee = async (req, res) => {
     try {
         employeeEmail = req.body.email;
         projectLabel = req.params.label;
+         // Finding release with provided email
         const employee = await Employee.findOne({ email: employeeEmail });
         if (!employee) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({ message: `Employee with email ${employeeEmail} not found` });
         }
+        //finding project with provided label
         projectFound = await Project.findOne({ label: projectLabel });
         if (projectFound.assignedEmployee) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 message: `${projectFound.label} already assigned`,
             });
         }
+        // Creating an update object
         let update = {
             assignedEmployee: {
                 id: employee._id,
                 email: employee.email,
             },
         };
+         //Finding and updating the project
         await Project.findOneAndUpdate({ label: projectLabel }, update, {
             new: true,
         });
+        // Sending a success response
         return res.status(StatusCodes.ACCEPTED).send({
             message: `Project assigned to employee ${employeeEmail} successfully`,
         });

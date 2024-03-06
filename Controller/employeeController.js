@@ -69,7 +69,7 @@ const getAllEmployee = async (req, res) => {
 // Function to update an employee
 const  updateEmpolyee = async (req, res) => {
     try {
-
+//verification de l'email
         // Checking if all required properties are provided in the request body
         if (!req.body.email || !req.body.fullName || !req.body.position || !req.body.rank || !req.body.entryDate) {
             return res

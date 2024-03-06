@@ -25,7 +25,7 @@ const userValidationSchema = Joi.object({
 
 
 
-const EmpolyeeValidationSchema = Joi.object({
+const empolyeeValidationSchema = Joi.object({
 
     fullName: Joi.string()
     .alphanum()
@@ -53,11 +53,13 @@ const EmpolyeeValidationSchema = Joi.object({
 const projectValidationSchema = Joi.object({
 
     label: Joi.string()
+    .alphanum()
     .min(5)
     .max(30)
     .required(),
 
     description: Joi.string()
+    .alphanum()
     .min(25)
     .max(150)
     .required(),
@@ -67,11 +69,13 @@ const projectValidationSchema = Joi.object({
 const releaseValidationSchema = Joi.object({
 
     name: Joi.string()
+    .alphanum()
     .min(3)
     .max(50)
     .required(),
 
     description: Joi.string()
+    .alphanum()
     .min(25)
     .max(150)
     .required(),
@@ -85,9 +89,40 @@ const releaseValidationSchema = Joi.object({
     .required(),
 });
 
+
+const demandValidationSchema = Joi.object({
+
+    title: Joi.string()
+    .alphanum()
+    .min(3)
+    .max(50)
+    .required(),
+
+    description: Joi.string()
+    .alphanum()
+    .min(25)
+    .max(150)
+    .required(),
+
+    start_date: Joi.date()
+    .iso()
+    .required(),
+
+    end_date: Joi.date()
+    .iso()
+    .required(),
+
+    estimation: Joi.string()
+    .alphanum()
+    .min(3)
+    .max(50)
+    .required(),
+
+})
 module.exports = {
     userValidationSchema,
-    EmpolyeeValidationSchema,
+    empolyeeValidationSchema,
     projectValidationSchema,
     releaseValidationSchema,
+    demandValidationSchema,
 };

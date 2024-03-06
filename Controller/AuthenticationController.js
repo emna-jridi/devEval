@@ -16,10 +16,13 @@ const login = async (req, res) => {
         }
  // Find user by email
         const foundUser = await User.findOne({ email: req.body.email });
+        console.log(foundUser);
         if (!foundUser) {
+
             return res
                 .status(StatusCodes.UNAUTHORIZED)
                 .json({ message: "user does not exist." });
+                
         }
         
   // Validate password

@@ -23,9 +23,7 @@ const userSchema = new mongoose.Schema({
       values: [roles.RA, roles.RPA, roles.RTA],
       message: `{value} does not have permission to connect`
     },
-
   },
-
 },
   { timestamps: true } //createdAt & updatedAt are handled automatically.
 );

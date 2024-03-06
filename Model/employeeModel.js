@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {EmpolyeeValidationSchema}= require('../Config/ValidatorConfig')
+const {empolyeeValidationSchema}= require('../Config/ValidatorConfig')
 
 const employeeSchema = new mongoose.Schema({
     fullName: {
@@ -29,9 +29,9 @@ const employeeSchema = new mongoose.Schema({
 }, { timestamps: true } //createdAt & updatedAt are handled automatically.
 )
 
-//a verifier
+//À vérifier
 employeeSchema.pre('save', function(next){
-    const {error} = EmpolyeeValidationSchema.validate(this.toObject());
+    const {error} = empolyeeValidationSchema.validate(this.toObject());
 if (error){
     throw new Error(`validation error: ${error.message}`)
 }
